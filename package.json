@@ -1,0 +1,16 @@
+{
+  "name": "web_apis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon app"
+  },
+  "dependencies": {
+    "express": "~4.16.1",
+    "puppeteer": "^13.6.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
