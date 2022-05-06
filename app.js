@@ -36,7 +36,7 @@ async function firstVisited(){
 		try {
 			
 			const URL = "https://wapforum.com.ng";
-		const browser = await puppeteer.launch({ headless: false });
+		const browser = await puppeteer.launch();
 		const page = await browser.newPage();
 
 		await page.goto(URL,{timeout: 0});
@@ -72,7 +72,7 @@ async function firstVisited(){
 async function alreadyVisited(cookies){
 
 	const URL = "https://wapforum.com.ng/usercp.php";
-		const browser = await puppeteer.launch({ headless: false });
+		const browser = await puppeteer.launch();
 		const page = await browser.newPage();
 
 		await page.goto(URL,{timeout: 0});
