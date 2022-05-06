@@ -24,10 +24,11 @@ app.get("/", async (req,res)=>{
     })
 
 	  res.json(data)
-
+console.log(data)
 		await browser.close()
 
 	} catch (error) {
+		console.log(error)
 		return res.json({message:error.message})
 	}
 
