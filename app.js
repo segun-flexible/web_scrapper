@@ -1,7 +1,6 @@
 const puppeteer = require("puppeteer");
 const express = require("express");
 const fs = require("fs");
-const { resolve } = require("path");
 const app = express();
 
 app.get("/", async (req, res) => {
@@ -22,6 +21,69 @@ app.get("/", async (req, res) => {
 		console.log(error,"freom, err");
 		return res.json({ message: error.message });
 	  }
+
+  
+});
+
+app.get("/coins", async (req, res) => {
+
+	try {
+		
+		const URL = "https://www.coingecko.com/";
+		const browser = await puppeteer.launch();
+		const page = await browser.newPage();
+
+		await page.goto(URL,{timeout: 0});
+
+		await waitTillHTMLRendered(page)
+		
+
+		const d = await page.evaluate( ()=>{
+			
+			const data = [];
+
+			document.querySelectorAll(".coin-table table tbody tr").forEach(coin =>{
+				data.push({
+					name: coin.querySelector(".tw-hidden").textContent.trim(),
+					abbr: coin.querySelector("span").textContent.trim(),
+					price: coin.querySelector(".no-wrap").textContent.trim(),
+					oneHourChanges: coin.querySelector(".td-change1h.change1h.stat-percent").textContent.trim(),
+					dailyChanges: coin.querySelector(".td-change24h.change24h.stat-percent").textContent.trim(),
+					sevenDaysChanges: coin.querySelector(".td-change7d.change7d.stat-percent").textContent.trim(),
+					dailyVolumes: coin.querySelector(".td-liquidity_score.lit").textContent.trim(),
+					mcap: coin.querySelector(".td-market_cap.cap.col-market.cap-price").textContent.trim()
+				})
+		})
+
+		
+		return data
+		})
+
+
+		await browser.close()
+
+		res.json(d)
+		
+
+
+		/*const axios = require("axios");
+		const cheerio = require('cheerio');
+		const { data } = await axios({
+			method: "GET",
+			url: "https://coinmarketcap.com",
+		})
+
+		const $ = cheerio.load(data);
+		
+		$("table.cmc-table tbody tr").find(".crypto-symbol").each((row, elem) => {
+			console.log($(elem).html())
+		});*/
+
+	
+	} catch (error) {
+		console.log(error,"freom, err");
+		return res.json({ message: error.message });
+	}
 
   
 });
@@ -82,7 +144,6 @@ async function alreadyVisited(cookies){
 		await browser.close()
 		resolve()
 }
-
 
 const waitTillHTMLRendered = async (page, timeout = 30000) => {
 	const checkDurationMsecs = 1000;
